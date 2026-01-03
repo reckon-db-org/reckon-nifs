@@ -1,7 +1,7 @@
 [package]
 name = "esdb_crypto_nif"
 version = "0.1.0"
-authors = ["R. Lefever"]
+authors = ["rgfaber"]
 edition = "2021"
 description = "NIF optimizations for reckon-db cryptographic operations"
 

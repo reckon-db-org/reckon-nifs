@@ -25,7 +25,7 @@
 %% When this loader runs, it sets the persistent_term keys to `true`,
 %% causing reckon-db to use the NIF implementations.
 %%
-%% @author Reckon-DB
+%% @author rgfaber
 -module(reckon_nifs_loader).
 
 -export([load_all/0, load_nif/2, is_loaded/1]).

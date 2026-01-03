@@ -3,7 +3,7 @@
 %% Minimal supervisor for the reckon_nifs application.
 %% Currently has no children - NIFs are stateless and loaded at startup.
 %%
-%% @author Reckon-DB
+%% @author rgfaber
 -module(reckon_nifs_sup).
 -behaviour(supervisor).
 

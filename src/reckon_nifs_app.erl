@@ -18,7 +18,7 @@
 %% reckon_nifs has NO dependencies on reckon-db. The dependency flows the
 %% other way: reckon-db optionally detects and uses reckon_nifs for acceleration.
 %%
-%% @author Reckon-DB
+%% @author rgfaber
 -module(reckon_nifs_app).
 -behaviour(application).
 
