@@ -1,0 +1,18 @@
+[package]
+name = "esdb_aggregate_nif"
+version = "0.1.0"
+authors = ["Macula.io"]
+edition = "2021"
+description = "NIF optimizations for erl-esdb event aggregation operations"
+
+[lib]
+name = "esdb_aggregate_nif"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Rustler for Erlang NIF bindings
+rustler = "0.34"
+
+[profile.release]
+lto = true
+opt-level = 3
