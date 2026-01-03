@@ -1,9 +1,9 @@
 [package]
 name = "esdb_hash_nif"
 version = "0.1.0"
-authors = ["Macula.io"]
+authors = ["R. Lefever"]
 edition = "2021"
-description = "NIF optimizations for erl-esdb hashing operations"
+description = "NIF optimizations for reckon-db hashing operations"
 
 [lib]
 name = "esdb_hash_nif"

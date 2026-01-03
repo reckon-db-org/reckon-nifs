@@ -1,4 +1,4 @@
-//! NIF optimizations for erl-esdb cryptographic operations.
+//! NIF optimizations for reckon-db cryptographic operations.
 //!
 //! This module provides high-performance implementations of:
 //! - Ed25519 signature verification

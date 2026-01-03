@@ -1,4 +1,4 @@
-//! NIF optimizations for erl-esdb event aggregation operations.
+//! NIF optimizations for reckon-db event aggregation operations.
 //!
 //! This module provides high-performance aggregation for event streams:
 //! - Bulk fold with tagged value semantics ({sum, N}, {overwrite, V})

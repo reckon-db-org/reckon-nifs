@@ -1,9 +1,9 @@
 [package]
 name = "esdb_gater_crypto_nif"
 version = "0.1.0"
-authors = ["Macula.io"]
+authors = ["R. Lefever"]
 edition = "2021"
-description = "High-performance NIF for erl-esdb-gater cryptographic operations (Base58, pattern matching)"
+description = "High-performance NIF for reckon-db-gater cryptographic operations (Base58, pattern matching)"
 
 [lib]
 name = "esdb_gater_crypto_nif"

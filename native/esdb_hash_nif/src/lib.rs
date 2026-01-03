@@ -1,4 +1,4 @@
-//! NIF optimizations for erl-esdb hashing operations.
+//! NIF optimizations for reckon-db hashing operations.
 //!
 //! This module provides high-performance hash implementations:
 //! - xxHash64: Extremely fast 64-bit hash

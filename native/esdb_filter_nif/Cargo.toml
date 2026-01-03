@@ -1,9 +1,9 @@
 [package]
 name = "esdb_filter_nif"
 version = "0.1.0"
-authors = ["Macula.io"]
+authors = ["R. Lefever"]
 edition = "2021"
-description = "NIF optimizations for erl-esdb pattern matching and filtering operations"
+description = "NIF optimizations for reckon-db pattern matching and filtering operations"
 
 [lib]
 name = "esdb_filter_nif"

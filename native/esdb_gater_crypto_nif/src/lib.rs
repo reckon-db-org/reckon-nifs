@@ -1,4 +1,4 @@
-//! High-performance NIF for erl-esdb-gater cryptographic operations.
+//! High-performance NIF for reckon-gater cryptographic operations.
 //!
 //! This module provides fast Base58 encoding/decoding for DID operations,
 //! accelerating capability token creation and verification.

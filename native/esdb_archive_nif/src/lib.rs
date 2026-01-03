@@ -1,4 +1,4 @@
-//! NIF optimizations for erl-esdb archive compression.
+//! NIF optimizations for reckon-db archive compression.
 //!
 //! This module provides high-performance compression implementations:
 //! - LZ4: Fastest compression/decompression (real-time use)

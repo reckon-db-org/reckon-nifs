@@ -1,4 +1,4 @@
-//! NIF optimizations for erl-esdb causation graph operations.
+//! NIF optimizations for reckon-db causation graph operations.
 //!
 //! This module provides high-performance graph algorithms for causation analysis:
 //! - Building directed graphs from event causation relationships

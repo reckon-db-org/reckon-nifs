@@ -1,4 +1,4 @@
-//! NIF optimizations for erl-esdb pattern matching and filtering operations.
+//! NIF optimizations for reckon-db pattern matching and filtering operations.
 //!
 //! This module provides high-performance pattern matching:
 //! - Compiled regex patterns for stream ID matching

@@ -1,9 +1,9 @@
 [package]
 name = "esdb_archive_nif"
 version = "0.1.0"
-authors = ["Macula.io"]
+authors = ["R. Lefever"]
 edition = "2021"
-description = "NIF optimizations for erl-esdb archive compression"
+description = "NIF optimizations for reckon-db archive compression"
 
 [lib]
 name = "esdb_archive_nif"
