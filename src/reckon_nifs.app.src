@@ -1,6 +1,6 @@
 {application, reckon_nifs, [
     {description, "High-performance NIF acceleration for reckon-db"},
-    {vsn, "0.1.0"},
+    {vsn, "1.0.0"},
     {registered, []},
     {mod, {reckon_nifs_app, []}},
     {applications, [

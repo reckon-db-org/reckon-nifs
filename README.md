@@ -14,8 +14,8 @@ Add to your `rebar.config` alongside reckon-db:
 
 ```erlang
 {deps, [
-    {reckon_db, "0.1.0"},
-    {reckon_nifs, "0.1.0"}  %% Optional: adds NIF acceleration
+    {reckon_db, "1.0.0"},
+    {reckon_nifs, "1.0.0"}  %% Optional: adds NIF acceleration
 ]}.
 ```
 
