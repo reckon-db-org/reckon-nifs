@@ -1,11 +1,11 @@
 [package]
-name = "esdb_graph_nif"
+name = "reckon_db_graph_nif"
 version = "0.1.0"
 edition = "2021"
 description = "NIF optimizations for causation graph operations"
 
 [lib]
-name = "esdb_graph_nif"
+name = "reckon_db_graph_nif"
 crate-type = ["cdylib"]
 
 [dependencies]

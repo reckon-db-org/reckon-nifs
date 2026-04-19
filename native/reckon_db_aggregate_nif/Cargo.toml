@@ -1,12 +1,12 @@
 [package]
-name = "esdb_aggregate_nif"
+name = "reckon_db_aggregate_nif"
 version = "0.1.0"
 authors = ["rgfaber"]
 edition = "2021"
 description = "NIF optimizations for reckon-db event aggregation operations"
 
 [lib]
-name = "esdb_aggregate_nif"
+name = "reckon_db_aggregate_nif"
 crate-type = ["cdylib"]
 
 [dependencies]

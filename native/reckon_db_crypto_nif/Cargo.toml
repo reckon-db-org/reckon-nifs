@@ -1,12 +1,12 @@
 [package]
-name = "esdb_crypto_nif"
+name = "reckon_db_crypto_nif"
 version = "0.1.0"
 authors = ["rgfaber"]
 edition = "2021"
 description = "NIF optimizations for reckon-db cryptographic operations"
 
 [lib]
-name = "esdb_crypto_nif"
+name = "reckon_db_crypto_nif"
 crate-type = ["cdylib"]
 
 [dependencies]

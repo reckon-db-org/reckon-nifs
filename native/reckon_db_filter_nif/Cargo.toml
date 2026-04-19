@@ -1,12 +1,12 @@
 [package]
-name = "esdb_filter_nif"
+name = "reckon_db_filter_nif"
 version = "0.1.0"
 authors = ["rgfaber"]
 edition = "2021"
 description = "NIF optimizations for reckon-db pattern matching and filtering operations"
 
 [lib]
-name = "esdb_filter_nif"
+name = "reckon_db_filter_nif"
 crate-type = ["cdylib"]
 
 [dependencies]

@@ -1,12 +1,12 @@
 [package]
-name = "esdb_gater_crypto_nif"
+name = "reckon_gater_crypto_nif"
 version = "0.1.0"
 authors = ["rgfaber"]
 edition = "2021"
 description = "High-performance NIF for reckon-db-gater cryptographic operations (Base58, pattern matching)"
 
 [lib]
-name = "esdb_gater_crypto_nif"
+name = "reckon_gater_crypto_nif"
 crate-type = ["cdylib"]
 
 [dependencies]

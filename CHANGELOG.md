@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-04-19
+
+### Changed
+
+**BREAKING**: All NIF crates renamed from `esdb_*` to layer-qualified
+`reckon_{db,gater}_*` to match the overall reckon-db-org naming scheme.
+
+| Old crate | New crate | Target layer |
+|---|---|---|
+| `esdb_aggregate_nif`    | `reckon_db_aggregate_nif`    | reckon-db |
+| `esdb_archive_nif`      | `reckon_db_archive_nif`      | reckon-db |
+| `esdb_crypto_nif`       | `reckon_db_crypto_nif`       | reckon-db |
+| `esdb_filter_nif`       | `reckon_db_filter_nif`       | reckon-db |
+| `esdb_graph_nif`        | `reckon_db_graph_nif`        | reckon-db |
+| `esdb_hash_nif`         | `reckon_db_hash_nif`         | reckon-db |
+| `esdb_gater_crypto_nif` | `reckon_gater_crypto_nif`    | reckon-gater |
+
+Built `.so` / `.dylib` / `.dll` output names change accordingly. Consumers
+(reckon-db and reckon-gater) update their `erlang:load_nif/2` target names
+in their 2.0.0 releases.
+
+### Migration
+
+Rebuilds required. No API behaviour changes — function signatures and
+return shapes are unchanged per crate.
+
 ## [1.0.0] - 2026-01-03
 
 ### Changed
