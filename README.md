@@ -89,7 +89,7 @@ erlang  %% Pure Erlang mode
 ## Building from Source
 
 ```bash
-git clone https://github.com/reckon-db-org/reckon-nifs.git
+git clone https://codeberg.org/reckon-db-org/reckon-nifs.git
 cd reckon-nifs
 rebar3 compile
 ```
