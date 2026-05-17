@@ -1,6 +1,14 @@
 # reckon-nifs
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow.svg)](https://buymeacoffee.com/beamologist)
 
+> **Status: deprecated as of 2026-05-17.** As of reckon-db 2.3.0, the
+> six reckon-db NIFs are bundled directly with reckon-db itself (see
+> `native/` and `priv/` in that repo). New consumers should depend
+> only on `{reckon_db, "~> 2.3"}` — no separate reckon-nifs
+> dependency is needed. **reckon-nifs 2.0.1 is the final release of
+> this package.** It stays on hex.pm for existing pinned consumers,
+> but receives no further updates.
+
 **High-performance Rust NIF acceleration for reckon-db.**
 
 This package ships compiled Rust implementations of reckon-db's hot-path operations. When `reckon_nifs` is on the code path, reckon-db's per-module `on_load` hooks pick up the `.so` files from `code:priv_dir(reckon_nifs)` and switch from the pure-Erlang fallbacks to the Rust fast path. No code changes required in consuming apps — adding the dep is enough.

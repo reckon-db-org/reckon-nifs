@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Status: deprecated
+
+**reckon-nifs 2.0.1 is the final release of this package.** As of
+reckon-db 2.3.0 the six reckon-db NIFs are bundled directly into the
+reckon-db hex package (`native/` + `priv/`), following the same
+in-tree pattern macula has been using. New consumers should depend
+only on `{reckon_db, "~> 2.3"}`.
+
+The sidecar pattern caused three real bugs (silent name drift between
+the Cargo package name and the `rustler::init!` target, a dead
+central loader whose `persistent_term` keys nobody read, and a
+cross-application `priv_dir` lookup that quietly fell back when the
+consumer hadn't depended on reckon-nifs explicitly). All three
+disappear when the NIFs live in the same package that uses them.
+
+reckon-nifs stays on hex.pm so existing pinned consumers keep
+working — reckon-db's wrapper modules retain a `code:priv_dir(reckon_nifs)`
+fallback in their `-on_load(init/0)` for that reason. But this
+package receives no further updates.
+
 ## [2.0.1] - 2026-05-17
 
 ### Fixed — Complete the `esdb_* → reckon_db_*` rename
