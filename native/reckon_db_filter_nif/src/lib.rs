@@ -11,7 +11,6 @@
 
 use regex::Regex;
 use rustler::{Binary, Encoder, Env, NifResult, Term};
-use std::sync::OnceLock;
 
 mod atoms {
     rustler::atoms! {

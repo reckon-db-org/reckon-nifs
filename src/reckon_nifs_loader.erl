@@ -1,80 +1,86 @@
-%% @doc NIF Loader for reckon-db
+%% @doc NIF presence verifier for reckon-db.
 %%
-%% This module loads all Rust NIFs and registers their availability
-%% via persistent_term. The reckon-db NIF wrapper modules check these
-%% persistent_term keys to determine whether to use the NIF or fall
-%% back to pure Erlang implementations.
+%% This module verifies that the reckon-nifs `priv/` directory
+%% contains the expected compiled NIF shared objects, and exposes a
+%% lookup function for consumers.
 %%
-%% == How Detection Works ==
+%% == Important: this module does NOT call `erlang:load_nif/2` ==
 %%
-%% Each NIF module in reckon-db has a pattern like:
+%% Each NIF wrapper module in reckon-db (e.g. `reckon_db_hash_nif',
+%% `reckon_db_crypto_nif') self-loads its NIF via `-on_load(init/0)'.
+%% That hook walks a search path that includes
+%% `code:priv_dir(reckon_nifs)/<nif_name>'. As long as the .so file
+%% is there under the right name, reckon-db picks it up and sets its
+%% own `<nif_name>_loaded' persistent_term key.
 %%
-%% ```
-%% -define(NIF_LOADED_KEY, esdb_hash_nif_loaded).
+%% Calling `erlang:load_nif/2' from this module would not help —
+%% NIFs can only be loaded into the module that owns the stub
+%% declarations. So reckon_nifs's job is purely to provide the .so
+%% files in the right place, then let reckon-db's per-module
+%% `-on_load' do the loading.
 %%
-%% is_nif_loaded() ->
-%%     persistent_term:get(?NIF_LOADED_KEY, false).
-%%
-%% xxhash64(Data) ->
-%%     case is_nif_loaded() of
-%%         true -> nif_xxhash64(Data);      %% Fast path (NIF)
-%%         false -> erlang_xxhash64(Data)   %% Fallback (Erlang)
-%%     end.
-%% '''
-%%
-%% When this loader runs, it sets the persistent_term keys to `true`,
-%% causing reckon-db to use the NIF implementations.
+%% Prior to v2.0.1 this module actively tried to `erlang:load_nif'
+%% from outside the target modules and set its own keys with the
+%% legacy `esdb_*' prefix; both behaviours were no-ops at best and
+%% the keys it set were never read. The module is now a verifier.
 %%
 %% @author rgfaber
 -module(reckon_nifs_loader).
 
--export([load_all/0, load_nif/2, is_loaded/1]).
+-export([load_all/0, verify/0, nif_path/1, available_nifs/0]).
 
-%% NIF name to persistent_term key mapping
-%% Server-side NIFs (used by reckon-db):
-%%   esdb_crypto_nif - Ed25519, SHA256, secure compare
-%%   esdb_archive_nif - LZ4 compression
-%%   esdb_hash_nif - xxHash, FNV-1a
-%%   esdb_aggregate_nif - Event aggregation
-%%   esdb_filter_nif - Regex/pattern matching
-%%   esdb_graph_nif - Graph algorithms
-%% Client-side NIFs (used by reckon-gater):
-%%   esdb_gater_crypto_nif - Base58, resource pattern matching
--define(NIF_KEYS, [
-    {esdb_crypto_nif, esdb_crypto_nif_loaded},
-    {esdb_archive_nif, esdb_archive_nif_loaded},
-    {esdb_hash_nif, esdb_hash_nif_loaded},
-    {esdb_aggregate_nif, esdb_aggregate_nif_loaded},
-    {esdb_filter_nif, esdb_filter_nif_loaded},
-    {esdb_graph_nif, esdb_graph_nif_loaded},
-    {esdb_gater_crypto_nif, esdb_gater_crypto_nif_loaded}
+%% Canonical list of NIF names this package ships. Each entry is
+%% the *file basename* under priv/ (without the .so suffix). These
+%% must match the `NifName' string in reckon-db's per-module init/0
+%% so reckon-db's `code:priv_dir(reckon_nifs)/<NifName>' lookup
+%% resolves.
+-define(NIF_NAMES, [
+    reckon_db_crypto_nif,
+    reckon_db_archive_nif,
+    reckon_db_hash_nif,
+    reckon_db_aggregate_nif,
+    reckon_db_filter_nif,
+    reckon_db_graph_nif,
+    reckon_gater_crypto_nif
 ]).
 
-%% @doc Load all available NIFs.
-%% Returns ok if all NIFs loaded successfully, or {error, Failures} if any failed.
--spec load_all() -> ok | {error, [{atom(), term()}]}.
+%% @doc Verify that all expected NIF .so files are present in priv/.
+%%
+%% Returns `ok' if every NIF in [[available_nifs/0]] has a
+%% corresponding .so file in `priv/'; otherwise `{missing, [Name]}'
+%% listing the absent ones. Does NOT call `erlang:load_nif/2' — see
+%% the module-level docstring.
+%%
+%% This is the function the application's `start/2' callback calls.
+%% The legacy name `load_all/0' is kept (now a synonym for
+%% [[verify/0]]) so external `application:ensure_all_started/1' flows
+%% from prior reckon-nifs 1.x / 2.0.0 keep compiling against this
+%% release.
+-spec load_all() -> ok | {missing, [atom()]}.
 load_all() ->
+    verify().
+
+%% @doc Same as [[load_all/0]] — preferred name for new callers.
+-spec verify() -> ok | {missing, [atom()]}.
+verify() ->
     PrivDir = get_priv_dir(),
-    Results = [load_nif_internal(PrivDir, NifName, Key) || {NifName, Key} <- ?NIF_KEYS],
-    Failures = [{Name, Reason} || {Name, {error, Reason}} <- Results],
-    case Failures of
-        [] -> ok;
-        _ -> {error, Failures}
+    Missing = [N || N <- ?NIF_NAMES, not filelib:is_regular(nif_path(PrivDir, N))],
+    case Missing of
+        []  -> ok;
+        _   -> {missing, Missing}
     end.
 
-%% @doc Load a specific NIF by name.
--spec load_nif(atom(), atom()) -> ok | {error, term()}.
-load_nif(NifName, PersistentTermKey) ->
-    PrivDir = get_priv_dir(),
-    case load_nif_internal(PrivDir, NifName, PersistentTermKey) of
-        {NifName, ok} -> ok;
-        {NifName, {error, Reason}} -> {error, Reason}
-    end.
+%% @doc Resolve the on-disk path for a given NIF basename. Returns
+%% the path even if the file doesn't exist — caller decides what to
+%% do with that.
+-spec nif_path(atom()) -> file:filename().
+nif_path(NifName) ->
+    nif_path(get_priv_dir(), NifName).
 
-%% @doc Check if a specific NIF is loaded.
--spec is_loaded(atom()) -> boolean().
-is_loaded(PersistentTermKey) ->
-    persistent_term:get(PersistentTermKey, false).
+%% @doc List the NIF names this package ships.
+-spec available_nifs() -> [atom()].
+available_nifs() ->
+    ?NIF_NAMES.
 
 %%====================================================================
 %% Internal Functions
@@ -96,18 +102,5 @@ get_priv_dir() ->
     end.
 
 %% @private
-load_nif_internal(PrivDir, NifName, PersistentTermKey) ->
-    Path = filename:join(PrivDir, atom_to_list(NifName)),
-    case erlang:load_nif(Path, 0) of
-        ok ->
-            persistent_term:put(PersistentTermKey, true),
-            logger:debug("[reckon_nifs] Loaded ~p", [NifName]),
-            {NifName, ok};
-        {error, {reload, _}} ->
-            %% Already loaded
-            persistent_term:put(PersistentTermKey, true),
-            {NifName, ok};
-        {error, Reason} ->
-            logger:warning("[reckon_nifs] Failed to load ~p: ~p", [NifName, Reason]),
-            {NifName, {error, Reason}}
-    end.
+nif_path(PrivDir, NifName) ->
+    filename:join(PrivDir, atom_to_list(NifName) ++ ".so").
