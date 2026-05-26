@@ -1,5 +1,5 @@
 # reckon-nifs
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow.svg)](https://buymeacoffee.com/beamologist)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow.svg)](https://buymeacoffee.com/rlefever)
 
 > **Status: deprecated as of 2026-05-17.** As of reckon-db 2.3.0, the
 > six reckon-db NIFs are bundled directly with reckon-db itself (see
