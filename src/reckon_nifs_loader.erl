@@ -88,18 +88,18 @@ available_nifs() ->
 
 %% @private
 get_priv_dir() ->
-    case code:priv_dir(reckon_nifs) of
-        {error, _} ->
-            %% Fallback for development
-            case code:which(?MODULE) of
-                Filename when is_list(Filename) ->
-                    filename:join(filename:dirname(filename:dirname(Filename)), "priv");
-                _ ->
-                    "priv"
-            end;
-        Dir ->
-            Dir
-    end.
+    priv_dir_or_fallback(code:priv_dir(reckon_nifs)).
+
+priv_dir_or_fallback({error, _}) ->
+    %% Fallback for development
+    priv_dir_from_module(code:which(?MODULE));
+priv_dir_or_fallback(Dir) ->
+    Dir.
+
+priv_dir_from_module(Filename) when is_list(Filename) ->
+    filename:join(filename:dirname(filename:dirname(Filename)), "priv");
+priv_dir_from_module(_) ->
+    "priv".
 
 %% @private
 nif_path(PrivDir, NifName) ->
