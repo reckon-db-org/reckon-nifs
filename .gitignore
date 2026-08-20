@@ -38,3 +38,5 @@ priv/*.dylib
 # Crash dumps
 rebar3.crashdump
 erl_crash.dump
+mix.lock
+rebar.lock
